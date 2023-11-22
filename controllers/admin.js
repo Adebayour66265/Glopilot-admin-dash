@@ -5,6 +5,7 @@ const nodemailer = require("nodemailer");
 const Withdrawal = require("../models/withdrawalRequest");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+
 require("dotenv").config();
 const register = async (req, res) => {
   try {
@@ -54,6 +55,87 @@ const login = async (req, res) => {
     console.log(error);
     res.status(500).send(error.message);
   }
+};
+
+// Driver side
+
+const createDriver = async (req, res) => {
+    try {
+        const {
+            email,
+            password,
+            firstName,
+            lastName,
+            phoneNumber,
+            stateOfOrigin,
+            lga,
+            country,
+            profilePicture,
+            driversLicense,
+            paymentDetails,
+            licenseNumber,
+            plateNumber,
+            vehicleDetails,
+            rating
+        } = req.body;
+        if (!email || !password) return res.status(400).json({ message: "Please fill in all the require fields."}); 
+        const driver = await Driver.findOne({ email: email });
+        if (driver) {
+          res.status(400).send("Driver already exists");
+        } else {
+          const hashedPassword = await bcrypt.hash(password, 12) 
+        const newDriver = new Driver({
+            email,
+            password: hashedPassword,
+            firstName,
+            lastName,
+            phoneNumber,
+            stateOfOrigin,
+            lga,
+            country,
+            profilePicture,
+            driversLicense,
+            paymentDetails,
+            licenseNumber,
+            plateNumber,
+            vehicleDetails,
+            rating
+        });
+        const token = jwt.sign(
+          { email: newDriver.email },
+          process.env.JWT_SECRET,
+          { expiresIn: "5y" }
+        );
+        const savedDriver = await newDriver.save();
+        res.status(201).json({savedDriver, token});
+      };
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+const driverLogin = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        if (!email || !password) return res.status(400).json({ message: "Please fill in all the require fields."}); 
+        const driver = await Driver.findOne({ email });
+
+        if (!driver) {
+            return res.status(401).json({ error: 'Invalid email or password ...2' });
+        } else {
+          const isMatch = await bcrypt.compare(password, driver.password);
+          if (!isMatch) {
+            res.status(400).send("Incorrect password");
+          } else {
+            const token = jwt.sign({ email: driver.email }, process.env.JWT_SECRET, {
+              expiresIn: "5y",
+            });
+            res.status(200).send({ email: driver.email, token: token });
+          }
+        }
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 };
 
 const getDrivers = async (req, res) => {
@@ -452,6 +534,8 @@ const resetPassword = async (req, res) => {
 module.exports = {
   register,
   login,
+  createDriver,
+  driverLogin,
   getDrivers,
   getDriver,
   deleteDriver,

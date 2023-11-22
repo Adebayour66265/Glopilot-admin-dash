@@ -99,6 +99,116 @@
         }
       }
     },
+    "/driver/registerD": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                },
+                "firstName":{
+                  "example":" first Name"
+                },
+                "lastName":{
+                  "example":" last Name"
+                },
+                "phoneNumber":{
+                  "example":"000021528"
+                },
+                "stateOfOrigin":{
+                  "example":"stateOfOrigin"
+                },
+                "lga":{
+                 "example": "local government"
+              },
+              "country":{
+                "example":"any"
+              },
+              "profilePicture":{
+                "example":"any"
+              },
+              "driversLicense":{
+                "example":"ABC1234AA"
+              },
+              "paymentDetails":{
+                "example": "any"
+              },
+              "licenseNumber":{
+                "example":"any"
+              },
+              "plateNumber":{
+                "example":"1234BBB"
+              },
+              "vehicleDetails": {
+                "example": "any"
+              },
+              "rating":{
+                "example":"any"
+              }
+
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/driver/loginD": {
+      "post": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "example": "any"
+                  },
+                  "password": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/admin/drivers": {
       "get": {
         "description": "",

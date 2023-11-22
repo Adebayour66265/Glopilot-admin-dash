@@ -30,6 +30,7 @@ app.get('/', (req, res) => {
 
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument, swaggerOptions));
 app.use('/admin', require('./routes/admin'));
+app.use('/driver', require('./routes/admin'));
 connectDB();
 app.listen(process.env.port || 5000, () => {
     console.log('Listening on port 8081');
