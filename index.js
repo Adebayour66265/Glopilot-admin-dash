@@ -25,6 +25,7 @@ app.use(express.json());
 
 
 app.get('/', (req, res) => {
+    res.json("Well come");
     res.send('Hello World!');
 })
 
